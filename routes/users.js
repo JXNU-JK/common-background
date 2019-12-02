@@ -2,13 +2,12 @@ var express = require('express');
 var router = express.Router();
 const conn = require('../utils/dbUtils.js')
 const getTokenValue = require('../utils/index.js').getTokenValue
+const sql = require('../dbBase/sql.js')
 
 /* 登录接口 */
 router.post('/login', function(req, res, next) {
   let query = req.body
-  console.log(query)
-  let sqlStr = 'select * from user where username = ?'
-  conn.query(sqlStr, query.username, (err, results) => {
+  conn.query(sql.loginSql, query.username, (err, results) => {
     if (err || !results) {
       return res.json({
         resultCode: 500,
@@ -30,8 +29,7 @@ router.post('/login', function(req, res, next) {
       } else {
         let token = getTokenValue(item.id, item.username)
         let tokenExpiredDate = new Date().getTime() + 12*60*60*1000
-        let sqlUpdate = 'update user set token=?,tokenExpiredDate=? where id=?'
-        conn.query(sqlUpdate, [token, tokenExpiredDate, +item.id], function(err, results) {
+        conn.query(sql.tokenUpdateSql, [token, tokenExpiredDate, +item.id], function(err, results) {
 
         })
         let data = JSON.parse(JSON.stringify(item))

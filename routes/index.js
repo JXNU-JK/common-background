@@ -5,6 +5,10 @@ const conn1 = require('../utils/dbUtils.js')
 const sql = require('../dbBase/sql.js');
 
 /* 首页信息接口 */
+router.get('/', function(req, res, next) {
+  res.render('index', { title: 'Express' });
+});
+/* 首页信息接口 */
 router.get('/homeInfo', function(req, res, next) {
   var result = {
     youth: [],
